@@ -18,13 +18,13 @@ function displayExecution(){
 
     //------------------Defining the Promise Object for fetching data----------
     const promiseObject = new Promise((resolve,reject)=>{
-        const data = fetch('https://dummyjson.com/posts');
+        const data = fetch('https://dummyjson.com/posts'); // Returns a promise object
         data.then(res =>{
         if(!res.ok) // Returns a Boolean
             throw new Error("Failure in HTTP response or URL invalid "); // Indicates HTTP status code not in 200-299 range
             else {
                 console.log("HTTP response was successful");
-                return res.json();
+                return res.json(); // returns another promise object
             }
         }).catch(err => console.log(err))
         .then(json_data => {        // res.json() itself returns a promise to be handled

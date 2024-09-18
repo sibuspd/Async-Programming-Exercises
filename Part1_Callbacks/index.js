@@ -10,7 +10,7 @@ function delayExecution(){
 
 function displayText(){
     let postsData;
-    const promiseObject = fetch('https://dummyjson.com/posts');
+    const promiseObject = fetch('https://dummyjson.com/posts'); //returns a promise object
     promiseObject.then(res=> res.json()).then(result => {
         postsData = result.posts;
         // console.log(postsData); // postsData is not an Array of Objects
