@@ -21,7 +21,17 @@ function displayExecution(){
 async function updateExecution(){
 
     try{ // When the promise from fetch() is resolved
-        const data = await fetch('https://dummyjson.com/posts'); // Returns the response object directly instead of promise object after resolving the promise internally.
+        const controller = new AbortController(); // For graceful handling I have used Web API.
+        
+        const timer = setTimeout(()=>{
+            controller.abort();
+            console.log("Time exceeded 5 seconds");
+        },5000); // Setting the maximum loading time to 5 seconds.
+        
+        const data = await fetch('https://dummyjson.com/posts',{signal: controller.signal}); // Returns the response object directly instead of promise object after resolving the promise internally.
+        
+        clearTimeout(timer); // the Timer will be cleared out if compiler reaches here within 5 seconds.
+
         if(!data.ok) // Returns a Boolean
         throw new Error("Failure in HTTP response or invalid URL "); // Indicates HTTP status code not in 200-299 range
         else console.log('HTTP response was successful.');
@@ -42,8 +52,14 @@ async function updateExecution(){
     
     catch(err){ // Incase the promise from fetch() is rejected
         const dataContainer = document.querySelector('.mainDisplay');
+        
+        if(err.name === 'AbortError'){ // Only in case the time has exceeded.
+        dataContainer.innerHTML = `<h3 id='message'>Request timed out. Please try again later.</h3>`;    
+        }
+        else{
             dataContainer.innerHTML = `<h3 id='message'>${err.message}</h3>`;
-            console.log(err.message);
+            console.log(err.message); // Other errors like Network issues.
+        }
     }
 }
 
